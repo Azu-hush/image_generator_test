@@ -1,0 +1,19 @@
+{
+  "name": "card-art-generator",
+  "version": "0.1.0",
+  "description": "Pipeline that turns a set theme + producer notes into 3-5 variants of a 10-card collectible set (Claude Code skill + Gemini image backend).",
+  "type": "module",
+  "engines": { "node": ">=20" },
+  "scripts": {
+    "validate": "node scripts/validate.mjs",
+    "gen": "node backends/gemini.mjs",
+    "pack": "node backends/manual.mjs",
+    "qa": "node scripts/qa-template.mjs",
+    "assemble": "node scripts/assemble.mjs",
+    "demo": "node scripts/validate.mjs examples/summer_fishing.plan.json && node backends/gemini.mjs --plan examples/summer_fishing.plan.json --dry-run && node backends/manual.mjs --plan examples/summer_fishing.plan.json"
+  },
+  "optionalDependencies": {
+    "sharp": "^0.34.0"
+  },
+  "license": "MIT"
+}

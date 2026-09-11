@@ -1,0 +1,1 @@
+CATEGORY 2 — object on a plain floor. Object: {object}. The object stands on a plain flat {surface} floor. Behind it a plain vertical backdrop in {bg_color} with {bg_pattern}, soft gradient. Floor and backdrop share the same hue family with a soft horizon line. No environment details, no props. Keep the object simple with no small details.

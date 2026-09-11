@@ -1,0 +1,17 @@
+set_id,set,frame_color,cards_range,cards
+1,Gardens,green,1-10,Flower Arch;Statue;Lamp Post;Bird Feeder;Topiary;Fountain;Chess Table;Planter;Pond;Park Gate
+2,Sports,orange,11-20,Baseball Mitt;Hoop Shot;Field Ball;Sneakers;Tennis;Golf Swing;Bottle;Aqua Soccer;Champion Cup;Boxing Gloves
+3,Finals,teal,21-30,Grad Cap;Book Stack;Podium;Calculator;Locker;Computer;Party Balloons;Clock;Honor Medal;Diploma
+4,Amusement,magenta,31-40,Wheel;Bumpers;Bounce;Gallery;Popcorn;Claw;Chains;Ice Cream;Coaster;Duck Ride
+5,Coolness,blue,41-50,Fan;Vending;Ice Cubes;Aircon;Mojito;Fresh Air;Ice Pop;Fruit Plate;Pool;Fan Fold
+6,Countrystead,green,51-60,Swing;Gardening;Basket;Lawn Mower;Front Door;Tea Cup;Book;Rocking Chair;Lantern;Pier
+7,Seafaring,teal,61-70,Spyglass;Buoy;Map;Ship;Anchor;Helm;Captain Hat;Lighthouse;Barrel;Captain
+8,Boyscouts,orange,71-80,Campfire Pot;Whistle;Jacket;Sleeping Bag;Bugle;Tent;Chair;Neckerchief;Binoculars;Scout
+9,Vacation,blue,81-90,Suitcase;Clock;Ticket;Neck Pillow;Taxi;Phone Booth;Plane;Travel Guide;Tourist;Traveller
+10,Beach,red,91-100,Sandcastle;Beach Umbrella;Pier;Cooler Box;Palm;Beach Ball;Beach Bag;Sunblock;Surfing;Beach Fun
+11,Music Fest,purple,101-110,Guitar;Spotlight;DJ Deck;Drums;Synth;Water Bottles;Polaroid;Wristband;Stage Duo;Rock Star
+12,Diving,blue,111-120,Mask;Message Bottle;Jellyfish;Treasure;Flippers;Submarine;Seahorse;Coral;Jet Ski;Diver
+13,Road Trip,green,121-130,Backpack;Gas Pump;Camper;Signpost;Motel Sign;Road Map;Bicycle;Coffee Break;Packing;Hitchhike
+14,Poolside,orange,131-140,Flip Flops;Cocktail;Flamingo Float;Sunscreen;Water Slide;Pool Bar;Towel;Pool Pig;Pool Man;Cow Float
+15,Tour,blue,141-150,Bus;Camera;Binoculars;Audio Guide;Antiquity;Postcard;Scooter;Cow Tourist;Waterfall;Sheep Tour
+16,Summer Party,gold,151-160,Party 1;Party 2;Party 3;Party 4;Party 5;Party 6;Party 7;Party 8;Party 9;Movie Night

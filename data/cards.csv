@@ -1,0 +1,36 @@
+id,set,set_id,name,category,gold,characters,background,surface,source_file
+1,Gardens,1,Flower Arch,2,no,,pink vertical stripes,pink floor,CardC6_card_01.png
+7,Gardens,1,Chess Table,4,no,,park lawn with trees and path,grass,CardC6_card_07.png
+21,Finals,3,Grad Cap,1,no,,blue concentric circles,none (floating),CardC6_card_21.png
+22,Finals,3,Book Stack,4,no,,room wall with window,desk,CardC6_card_22.png
+23,Finals,3,Podium,3,no,,red stage curtain,wooden stage floor,CardC6_card_23.png
+24,Finals,3,Calculator,1,no,,yellow with repeating pi symbols,none (floating),CardC6_card_24.png
+25,Finals,3,Locker,3,no,,purple wall,wooden floor,CardC6_card_25.png
+26,Finals,3,Computer,3,no,,orange gradient,wooden desk,CardC6_card_26.png
+27,Finals,3,Party Balloons,1,no,,blue sky with clouds,none (floating),CardC6_card_27.png
+28,Finals,3,Clock,1,no,,green vertical stripes,none (wall-mounted),CardC6_card_28.png
+29,Finals,3,Honor Medal,1,no,,blue light rays,none (floating),CardC6_card_29.png
+30,Finals,3,Diploma,2,no,,dark blue gradient,glossy blue table,CardC6_card_30.png
+37,Amusement,4,Chains,2,no,,purple gradient,purple floor,CardC6_card_37.png
+41,Coolness,5,Fan,4,no,,orange wall with window and green curtain,none (room),CardC6_card_41.png
+42,Coolness,5,Vending,2,no,,magenta gradient,magenta floor,CardC6_card_42.png
+43,Coolness,5,Ice Cubes,3,no,,blue light rays,wooden table,CardC6_card_43.png
+44,Coolness,5,Aircon,3,no,,green striped wallpaper,none (wall-mounted),CardC6_card_44.png
+45,Coolness,5,Mojito,2,no,,blue concentric circles,glossy blue table,CardC6_card_45.png
+46,Coolness,5,Fresh Air,3,no,,orange brick wall,none (window in wall),CardC6_card_46.png
+47,Coolness,5,Ice Pop,1,no,,green light rays,none (floating),CardC6_card_47.png
+48,Coolness,5,Fruit Plate,3,no,,wooden table (top view),wooden table,CardC6_card_48.png
+49,Coolness,5,Pool,4,no,,backyard lawn with wooden fence,grass,CardC6_card_49.png
+50,Coolness,5,Fan Fold,1,no,,yellow wavy pattern,none (floating),CardC6_card_50.png
+67,Seafaring,7,Captain Hat,3,no,,wooden ship wall,wooden deck,CardC6_card_67.png
+73,Boyscouts,8,Jacket,1,no,,green light rays,none (floating),CardC6_card_73.png
+85,Vacation,9,Taxi,3,no,,blue light rays,asphalt road,CardC6_card_85.png
+98,Beach,10,Sunblock,4,no,,blue sky with clouds,none (tall chair),CardC6_card_98.png
+99,Beach,10,Surfing,5,yes,Rooster,ocean wave,surfboard on water,CardC6_card_99.png
+100,Beach,10,Beach Fun,5,yes,Man;Pig,beach with palm and umbrella,sea water,CardC6_card_100.png
+119,Diving,12,Jet Ski,5,yes,Cow,tropical sea with islands,jet ski on water,CardC6_card_119.png
+125,Road Trip,13,Motel Sign,4,no,,night motel exterior,none (sign post),CardC6_card_125.png
+128,Road Trip,13,Coffee Break,5,yes,Man,green meadow with car,car hood with picnic cloth,CardC6_card_128.png
+129,Road Trip,13,Packing,5,yes,Pig;Rooster,road with bushes,asphalt,CardC6_card_129.png
+130,Road Trip,13,Hitchhike,5,yes,Man;Rooster,desert highway with cacti,road,CardC6_card_130.png
+160,Summer Party,16,Movie Night,5,yes,Man;Rooster,night backyard with string lights and screen,picnic blanket on grass,CardC6_card_160.png

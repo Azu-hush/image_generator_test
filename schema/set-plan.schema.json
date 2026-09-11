@@ -1,0 +1,55 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "Card set plan",
+  "type": "object",
+  "required": ["collection", "set", "cards"],
+  "properties": {
+    "collection": { "type": "string", "description": "Collection theme, e.g. Summer" },
+    "set": {
+      "type": "object",
+      "required": ["name", "theme"],
+      "properties": {
+        "name": { "type": "string", "description": "Set title, 1-2 words" },
+        "theme": { "type": "string", "description": "One sentence describing the sub-theme" },
+        "frame_color": { "type": "string", "description": "UI frame color hint (not rendered)" },
+        "producer_notes": { "type": "string" },
+        "gold_count": { "type": "integer", "minimum": 0, "maximum": 10 }
+      }
+    },
+    "generation": {
+      "type": "object",
+      "properties": {
+        "candidates_per_card": { "type": "integer", "minimum": 1, "maximum": 8, "default": 4 },
+        "variants": { "type": "integer", "minimum": 1, "maximum": 5, "default": 3 },
+        "aspect_ratio": { "type": "string", "enum": ["4:5", "1:1", "3:4"], "default": "4:5" },
+        "image_size": { "type": "string", "enum": ["512", "1K", "2K"], "default": "1K" },
+        "model": { "type": "string", "default": "gemini-3.1-flash-image" }
+      }
+    },
+    "cards": {
+      "type": "array",
+      "minItems": 10,
+      "maxItems": 10,
+      "items": {
+        "type": "object",
+        "required": ["id", "name", "category", "object", "bg_color"],
+        "properties": {
+          "id": { "type": "integer", "minimum": 1, "maximum": 10 },
+          "name": { "type": "string" },
+          "category": { "type": "integer", "minimum": 1, "maximum": 5 },
+          "gold": { "type": "boolean", "default": false },
+          "object": { "type": "string", "description": "Full visual description of the hero object (or of the scene props for gold cards)" },
+          "bg_color": { "type": "string" },
+          "bg_pattern": { "type": "string", "description": "cat 1-3: radial light rays | concentric circles | vertical stripes | wavy lines | repeating <icon> pattern | sky with clouds | plain gradient" },
+          "surface": { "type": "string", "description": "cat 2-3: floor / table material" },
+          "environment": { "type": "string", "description": "cat 4-5: place" },
+          "environment_details": { "type": "string", "description": "cat 4-5: 2-4 soft background elements" },
+          "props": { "type": "string", "description": "cat 3-4: up to 2 secondary props or 'none'" },
+          "characters": { "type": "array", "items": { "type": "string", "enum": ["man", "pig", "rooster", "cow", "sheep"] }, "maxItems": 2 },
+          "scene": { "type": "string", "description": "cat 5: one-sentence ironic situation" },
+          "refs": { "type": "array", "items": { "type": "string" }, "description": "Reference image paths relative to repo root" }
+        }
+      }
+    }
+  }
+}

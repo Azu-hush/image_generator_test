@@ -1,0 +1,1 @@
+The attached images are references. {ref_note} Match their rendering style, lighting, color saturation and level of detail exactly. Do not copy the objects from the style references; create the requested object instead.

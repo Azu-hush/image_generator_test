@@ -1,0 +1,1 @@
+CATEGORY 4 — object in an environment. Object: {object}. The object is placed in a realistic but simplified {environment}, and remains the clear central focus, large in frame. Environment elements are soft, low-detail and slightly softened by depth: {environment_details}. Dominant background color: {bg_color}. No people or animals. Secondary props allowed: {props}.

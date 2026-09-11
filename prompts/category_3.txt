@@ -1,0 +1,1 @@
+CATEGORY 3 — object on a realistic surface. Object: {object}. The object stands on (or is built into) a realistic but simple {surface}. Behind it a plain vertical backdrop: {bg_color} with {bg_pattern}. The surface is rendered with simple material detail (wood grain, tiles, grass tufts), the backdrop stays flat and simple. No other objects except: {props}.
