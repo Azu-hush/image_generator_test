@@ -7,7 +7,7 @@
     "producer_notes": "Benchmark set: reproduce the original objects as closely as possible so the result can be compared side by side with data/cards/041-050.",
     "gold_count": 0
   },
-  "generation": { "candidates_per_card": 4, "variants": 3, "aspect_ratio": "4:5", "image_size": "1K", "model": "gemini-3.1-flash-image" },
+  "generation": { "candidates_per_card": 4, "variants": 3, "aspect_ratio": "4:5", "image_size": "1K" },
   "cards": [
     { "id": 1, "name": "Fan", "category": 4, "object": "A light-blue pedestal fan with a round silver wire cage, three wide sky-blue blades and a chrome pole, seen from the front and slightly above.", "bg_color": "warm orange", "environment": "cozy room corner", "environment_details": "an orange wall, a window with sky on the left, a long green curtain moving in the breeze", "props": "none", "refs": ["data/cards/041_coolness_fan_c4.png", "data/cards/049_coolness_pool_c4.png"] },
     { "id": 2, "name": "Vending", "category": 2, "object": "A chunky bright-blue vending machine with a glass front showing rows of colorful cans and bottles, a small screen and a silver pickup tray.", "bg_color": "magenta", "bg_pattern": "a plain soft gradient", "surface": "glossy magenta", "refs": ["data/cards/042_coolness_vending_c2.png", "data/cards/030_finals_diploma_c2.png", "data/cards/037_amusement_chains_c2.png"] },

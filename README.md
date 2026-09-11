@@ -1,7 +1,8 @@
 # card-art-generator
 
 Turns a **set theme + producer notes** into **3–5 variants of a 10-card collectible set** for a mobile casual game.
-Claude Code does the art direction, prompt writing and visual QA; the Gemini image API renders the pictures.
+Claude Code does the art direction, prompt writing and visual QA; an image API renders the pictures.
+Two interchangeable backends: **Gemini** (`gemini-3.1-flash-image`) and **OpenAI** (`gpt-image-2.5-flare`), both with reference images.
 Without an API key the whole pipeline runs in dry-run mode and produces copy-paste prompt packs instead of images.
 
 Русская версия: [README.ru.md](README.ru.md).
@@ -21,13 +22,17 @@ git clone <this repo> && cd card-art-generator
 npm run demo                 # validates the example plan, dry-runs the backend, writes a prompt pack
 ```
 
-Then, to actually render images:
+Then, to actually render images, pick a backend:
 
-1. Get a Gemini API key and enable billing on the project (image models have no free tier, ≈ $0.045 per image): see [docs/gemini-api-key.ru.md](docs/gemini-api-key.ru.md).
-2. `setx GEMINI_API_KEY "..."` (Windows) or `export GEMINI_API_KEY=...`, restart the terminal.
-3. `node backends/gemini.mjs --plan examples/summer_fishing.plan.json` → 40 candidates in `out/summer/fishing/candidates/`.
-4. `node scripts/qa-template.mjs --set out/summer/fishing` → score candidates in `qa.json` (Claude does it in the skill).
-5. `node scripts/assemble.mjs --set out/summer/fishing --variants 3` → `out/summer/fishing/variants/index.html`.
+| Backend | Key | Guide | Command |
+|---|---|---|---|
+| Gemini | `GEMINI_API_KEY` (billing required, no free tier, ≈ $0.045/image) | [docs/gemini-api-key.ru.md](docs/gemini-api-key.ru.md) | `node backends/gemini.mjs --plan <plan>` |
+| OpenAI | `OPENAI_API_KEY` (prepaid credits, ≈ $0.03–0.06/image) | [docs/openai-api-key.ru.md](docs/openai-api-key.ru.md) | `node backends/openai.mjs --plan <plan>` |
+
+1. `setx GEMINI_API_KEY "..."` or `setx OPENAI_API_KEY "..."` (Windows) / `export ...`, restart the terminal.
+2. `node backends/openai.mjs --plan examples/summer_fishing.plan.json` → 40 candidates in `out/summer/fishing/candidates/` (add `--candidates 2` for a cheaper first run).
+3. `node scripts/qa-template.mjs --set out/summer/fishing` → score candidates in `qa.json` (Claude does it in the skill).
+4. `node scripts/assemble.mjs --set out/summer/fishing --variants 3` → `out/summer/fishing/variants/index.html`.
 
 Optional: `npm i sharp` to have variants cropped to the in-game card size 430 × 480.
 
@@ -49,8 +54,9 @@ The skill (`.claude/skills/card-set/SKILL.md`) plans the set, validates it, runs
 | `prompts/` | prompt templates: base style, categories 1–5, negative, reference note, planner system prompt |
 | `schema/set-plan.schema.json` | plan format (10 cards, categories, colors, refs) |
 | `examples/` | `summer_coolness_remake` (benchmark vs. existing cards) and `summer_fishing` (new set, 2 gold) |
-| `lib/` | plan validation, prompt builder, reference picker |
+| `lib/` | plan validation, prompt builder, reference picker, shared backend runner |
 | `backends/gemini.mjs` | Gemini `generateContent` image backend with reference images, retries, dry run |
+| `backends/openai.mjs` | OpenAI `/v1/images/edits` backend (`gpt-image-2.5-flare`, refs as `image[]`, `input_fidelity: high` on gold cards) |
 | `backends/manual.mjs` | prompt pack (MD + HTML with copy buttons) for manual generation |
 | `scripts/` | `validate`, `qa-template`, `assemble` |
 | `qa/checklist.md` | scoring rubric used by the vision QA step |
@@ -71,7 +77,7 @@ Categories: 1 floating object on a flat patterned background · 2 object on a pl
 
 ## Cost
 
-`gemini-3.1-flash-image` at 1K ≈ $0.045 per image. A set with 4 candidates per card ≈ $1.8; a 16-set collection with 3 variants ≈ $25–35. The paid tier does not use your prompts or images for training.
+`gemini-3.1-flash-image` at 1K ≈ $0.045 per image; `gpt-image-2.5-flare` at medium quality ≈ $0.03–0.06. A set with 4 candidates per card ≈ $1.5–2.5; a 16-set collection with 3 variants ≈ $25–40. Neither API uses your prompts or images for training on paid usage.
 
 ## License
 

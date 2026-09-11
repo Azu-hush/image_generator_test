@@ -7,7 +7,7 @@
     "producer_notes": "New set not present in the current 16. Warm nostalgic mood, lots of turquoise and orange, no dead fish, keep it cute. Two gold cards.",
     "gold_count": 2
   },
-  "generation": { "candidates_per_card": 4, "variants": 3, "aspect_ratio": "4:5", "image_size": "1K", "model": "gemini-3.1-flash-image" },
+  "generation": { "candidates_per_card": 4, "variants": 3, "aspect_ratio": "4:5", "image_size": "1K" },
   "cards": [
     { "id": 1, "name": "Bobber", "category": 1, "object": "A classic round fishing float, red top half and white bottom half with a small yellow stem, glossy plastic, floating diagonally with a short piece of line.", "bg_color": "turquoise", "bg_pattern": "radial light rays", "refs": ["data/cards/029_finals_honor_medal_c1.png", "data/cards/047_coolness_ice_pop_c1.png", "data/cards/073_boyscouts_jacket_c1.png"] },
     { "id": 2, "name": "Tackle Box", "category": 3, "object": "An open orange plastic tackle box with two fold-out trays holding big colorful lures and bobbers, chunky latch and handle.", "bg_color": "teal", "bg_pattern": "plain gradient", "surface": "weathered wooden dock planks", "props": "none", "refs": ["data/cards/043_coolness_ice_cubes_c3.png", "data/cards/067_seafaring_captain_hat_c3.png", "data/cards/026_finals_computer_c3.png"] },

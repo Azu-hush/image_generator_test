@@ -19,10 +19,11 @@ Arguments: `/card-set <collection> "<set theme>" "<producer notes>"`. If the set
 
 ## Step 2 — Generate
 
-- `node backends/gemini.mjs --plan <plan>`  
-  Without `GEMINI_API_KEY` this is a dry run: prompts land in `out/<collection>/<set>/prompts/`. Tell the user and also run `node backends/manual.mjs --plan <plan>` so they get `prompt-pack.html` for manual generation.
-- With a key: default is 4 candidates per card (≈ $1.8 per set on gemini-3.1-flash-image). Do not raise `--candidates` above 6 without asking.
-- Regenerate a single card: `node backends/gemini.mjs --plan <plan> --cards 7 --force`. Put the fix instruction from QA notes into that card's `object` field first.
+- Pick the backend by the key that exists in the environment (check with `node -e "console.log(!!process.env.OPENAI_API_KEY, !!process.env.GEMINI_API_KEY)"`, never print the values):
+  `node backends/openai.mjs --plan <plan>` or `node backends/gemini.mjs --plan <plan>`.
+  Without any key this is a dry run: prompts land in `out/<collection>/<set>/prompts/`. Tell the user and also run `node backends/manual.mjs --plan <plan>` so they get `prompt-pack.html` for manual generation.
+- With a key: default is 4 candidates per card (≈ $1.5–2.5 per set). For a first test use `--candidates 2`. Do not raise `--candidates` above 6 without asking.
+- Regenerate a single card: `node backends/<backend>.mjs --plan <plan> --cards 7 --force`. Put the fix instruction from QA notes into that card's `object` field first.
 
 ## Step 3 — QA (vision)
 
