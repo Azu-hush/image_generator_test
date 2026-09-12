@@ -103,3 +103,19 @@ Categories: 1 floating object on a flat patterned background · 2 object on a pl
 ## License
 
 MIT for the code and prompts. Reference card images in `data/` belong to their game studio and are included for style reference only.
+
+## Self-test
+
+```bash
+npm test
+```
+
+Runs every script offline against a local mock of the three provider APIs (no keys, no network): validation, dry runs, both image backends with reference images and retries, planner and QA through Anthropic/OpenAI/Gemini adapters, assembly and comparison. Takes about 20 seconds.
+
+## Troubleshooting
+
+- **PowerShell: `npm.ps1 cannot be loaded`** — run `npm.cmd run demo` or call the scripts directly with `node ...`; or allow local scripts once: `Set-ExecutionPolicy -Scope CurrentUser RemoteSigned`.
+- **PowerShell 5: `&&` is not valid`** — run commands one per line or join them with `;`.
+- **`OPENAI_API_KEY is not set` right after `setx`** — restart the terminal (and Claude Code); `setx` affects new processes only.
+- **HTTP 429 / 5xx during generation** — the backends retry 4 times with back-off; raise `GEN_DELAY_MS` (default 1500) if it keeps happening.
+- **`WARNING: "<model>" is not a known ... image model`** — a `CARDGEN_IMAGE_MODEL` or plan `model` meant for another provider; pair it with `CARDGEN_IMAGE_PROVIDER` or pass `--model`.

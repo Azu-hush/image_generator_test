@@ -27,8 +27,8 @@
   <rect x="640" y="70" width="270" height="270" rx="14" fill="#e8f5e9" stroke="#2e7d32" stroke-width="2"/>
   <text x="775" y="100" text-anchor="middle" font-weight="600" fill="#1b5e20">Руки: бэкенд генерации</text>
   <rect x="660" y="120" width="230" height="70" rx="8" fill="#fff" stroke="#a5d6a7"/>
-  <text x="775" y="146" text-anchor="middle" font-weight="600">gemini.mjs</text>
-  <text x="775" y="170" text-anchor="middle" font-size="12" fill="#37474f">Gemini API + референсы, ≈$0.045 за картинку</text>
+  <text x="775" y="146" text-anchor="middle" font-weight="600">gemini.mjs · openai.mjs</text>
+  <text x="775" y="170" text-anchor="middle" font-size="12" fill="#37474f">API с референс-картинками, $0.03–0.13 за картинку</text>
   <rect x="660" y="200" width="230" height="60" rx="8" fill="#fff" stroke="#a5d6a7"/>
   <text x="775" y="224" text-anchor="middle" font-weight="600">manual.mjs</text>
   <text x="775" y="246" text-anchor="middle" font-size="12" fill="#37474f">пакет промптов, бесплатно, руками</text>

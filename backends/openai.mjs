@@ -7,6 +7,7 @@
 // (a ChatGPT Plus subscription alone does not include API access).
 // Without the key it is a dry run: prompts and request manifests are written, nothing is called.
 import { runBackend, httpError, readRefBlobs } from "../lib/run.mjs";
+import { BASE } from "../lib/llm.mjs";
 
 const backend = {
   name: "openai",
@@ -30,7 +31,7 @@ const backend = {
     for (const [k, v] of Object.entries(backend.settings(gen, card))) form.append(k, v);
     for (const r of readRefBlobs(refFiles)) form.append("image[]", new Blob([r.buffer], { type: r.mime }), r.name);
 
-    const res = await fetch("https://api.openai.com/v1/images/edits", {
+    const res = await fetch(`${BASE.openai()}/v1/images/edits`, {
       method: "POST",
       headers: { authorization: `Bearer ${apiKey}` },
       body: form,

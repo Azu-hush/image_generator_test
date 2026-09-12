@@ -6,6 +6,7 @@
 // Needs GEMINI_API_KEY with billing enabled (image models have no free tier).
 // Without the key it is a dry run: prompts and request manifests are written, nothing is called.
 import { runBackend, httpError, readRefBlobs } from "../lib/run.mjs";
+import { BASE } from "../lib/llm.mjs";
 
 const backend = {
   name: "gemini",
@@ -18,7 +19,7 @@ const backend = {
   async generate({ model, prompt, refFiles, gen, apiKey }) {
     const parts = readRefBlobs(refFiles).map((r) => ({ inlineData: { mimeType: r.mime, data: r.buffer.toString("base64") } }));
     const body = { contents: [{ role: "user", parts: [...parts, { text: prompt }] }], generationConfig: backend.settings(gen) };
-    const res = await fetch(`https://generativelanguage.googleapis.com/v1beta/models/${model}:generateContent`, {
+    const res = await fetch(`${BASE.gemini()}/v1beta/models/${model}:generateContent`, {
       method: "POST",
       headers: { "content-type": "application/json", "x-goog-api-key": apiKey },
       body: JSON.stringify(body),
