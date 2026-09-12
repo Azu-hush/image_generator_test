@@ -31,10 +31,11 @@ Then, to actually render images, pick a backend:
 
 1. `setx GEMINI_API_KEY "..."` or `setx OPENAI_API_KEY "..."` (Windows) / `export ...`, restart the terminal.
 2. `node backends/openai.mjs --plan examples/summer_fishing.plan.json` → 40 candidates in `out/summer/fishing/candidates/` (add `--candidates 2` for a cheaper first run).
-3. `node scripts/qa-template.mjs --set out/summer/fishing` → score candidates in `qa.json` (Claude does it in the skill).
-4. `node scripts/assemble.mjs --set out/summer/fishing --variants 3` → `out/summer/fishing/variants/index.html`.
+3. `node scripts/fit.mjs --set out/summer/fishing` → centre-crops every candidate to the card aspect 430:480 (add `--size card` for exactly 430×480); generators return 4:5, 2:3 or 1:1.
+4. `node scripts/qa-template.mjs --set out/summer/fishing` → score candidates in `qa.json` (Claude does it in the skill).
+5. `node scripts/assemble.mjs --set out/summer/fishing --variants 3` → `out/summer/fishing/variants/index.html`.
 
-Optional: `npm i sharp` to have variants cropped to the in-game card size 430 × 480.
+`npm install` once: it brings in `sharp`, used by `fit` and `assemble` for cropping to the card size 430 × 480.
 
 ## Switching models per stage
 

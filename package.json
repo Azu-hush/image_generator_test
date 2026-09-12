@@ -15,10 +15,11 @@
     "assemble": "node scripts/assemble.mjs",
     "demo": "node scripts/validate.mjs examples/summer_fishing.plan.json && node backends/gemini.mjs --plan examples/summer_fishing.plan.json --dry-run && node backends/openai.mjs --plan examples/summer_fishing.plan.json --dry-run && node backends/manual.mjs --plan examples/summer_fishing.plan.json",
     "brief": "node scripts/brief.mjs",
-    "test": "node scripts/selftest.mjs"
+    "test": "node scripts/selftest.mjs",
+    "fit": "node scripts/fit.mjs"
   },
-  "optionalDependencies": {
+  "license": "MIT",
+  "dependencies": {
     "sharp": "^0.34.0"
-  },
-  "license": "MIT"
+  }
 }
