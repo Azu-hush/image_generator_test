@@ -1,0 +1,6 @@
+{
+  "_comment": "Default model per stage. Override order: producer notes (parsed by the skill) > CLI flags > plan.generation > env CARDGEN_<STAGE>_PROVIDER / _MODEL > this file. Run `node scripts/models.mjs` for the catalog.",
+  "planner": { "provider": "anthropic", "model": "claude-opus-5" },
+  "image":   { "provider": "openai",    "model": "gpt-image-2.5-flare" },
+  "qa":      { "provider": "anthropic", "model": "claude-sonnet-5" }
+}

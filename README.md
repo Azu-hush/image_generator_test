@@ -26,7 +26,7 @@ Then, to actually render images, pick a backend:
 
 | Backend | Key | Guide | Command |
 |---|---|---|---|
-| Gemini | `GEMINI_API_KEY` (billing required, no free tier, ≈ $0.045/image) | [docs/gemini-api-key.ru.md](docs/gemini-api-key.ru.md) | `node backends/gemini.mjs --plan <plan>` |
+| Gemini | `GEMINI_API_KEY` (billing required, no free tier, ≈ $0.067/image) | [docs/gemini-api-key.ru.md](docs/gemini-api-key.ru.md) | `node backends/gemini.mjs --plan <plan>` |
 | OpenAI | `OPENAI_API_KEY` (prepaid credits, ≈ $0.03–0.06/image) | [docs/openai-api-key.ru.md](docs/openai-api-key.ru.md) | `node backends/openai.mjs --plan <plan>` |
 
 1. `setx GEMINI_API_KEY "..."` or `setx OPENAI_API_KEY "..."` (Windows) / `export ...`, restart the terminal.
@@ -35,6 +35,26 @@ Then, to actually render images, pick a backend:
 4. `node scripts/assemble.mjs --set out/summer/fishing --variants 3` → `out/summer/fishing/variants/index.html`.
 
 Optional: `npm i sharp` to have variants cropped to the in-game card size 430 × 480.
+
+## Switching models per stage
+
+Three stages have a model behind them: **planner** (text), **image**, **qa** (vision). Providers: Anthropic, OpenAI, Gemini (image: OpenAI, Gemini).
+
+| Layer | How |
+|---|---|
+| Default | `config.json` |
+| Environment | `CARDGEN_PLANNER_PROVIDER`, `CARDGEN_IMAGE_MODEL`, `CARDGEN_QA_PROVIDER` … |
+| Per run | `--provider` / `--model` on `scripts/plan.mjs`, `backends/*.mjs`, `scripts/qa.mjs` |
+| Producer wish | `/card-set … "images on Gemini Pro, QA cheap"` — the skill turns it into flags |
+
+```bash
+node scripts/models.mjs                      # catalog with prices, current choice, key presence
+node scripts/plan.mjs --collection Summer --set Camping --notes "warm colors" --provider openai
+node scripts/qa.mjs --set out/summer/camping --provider gemini
+node scripts/compare.mjs --plan examples/summer_coolness_remake.plan.json --backends openai,gemini:gemini-3-pro-image --cards 1,3,7,10
+```
+
+Full price/quality comparison per stage: [docs/MODELS.ru.md](docs/MODELS.ru.md). The model used at each stage is recorded in `plan.json` (`meta.planner`), `manifest.json` and `qa.json` (`judge`).
 
 ## Using it as a Claude Code skill
 
@@ -54,11 +74,12 @@ The skill (`.claude/skills/card-set/SKILL.md`) plans the set, validates it, runs
 | `prompts/` | prompt templates: base style, categories 1–5, negative, reference note, planner system prompt |
 | `schema/set-plan.schema.json` | plan format (10 cards, categories, colors, refs) |
 | `examples/` | `summer_coolness_remake` (benchmark vs. existing cards) and `summer_fishing` (new set, 2 gold) |
-| `lib/` | plan validation, prompt builder, reference picker, shared backend runner |
+| `config.json`, `models.json` | default model per stage; model catalog with prices |
+| `lib/` | plan validation, prompt builder, reference picker, shared backend runner, per-stage config, text/vision chat adapter |
 | `backends/gemini.mjs` | Gemini `generateContent` image backend with reference images, retries, dry run |
 | `backends/openai.mjs` | OpenAI `/v1/images/edits` backend (`gpt-image-2.5-flare`, refs as `image[]`, `input_fidelity: high` on gold cards) |
 | `backends/manual.mjs` | prompt pack (MD + HTML with copy buttons) for manual generation |
-| `scripts/` | `validate`, `qa-template`, `assemble` |
+| `scripts/` | `plan` (planner via any text model), `qa` (vision judge via any model), `compare` (backends side by side), `models`, `validate`, `qa-template`, `assemble` |
 | `qa/checklist.md` | scoring rubric used by the vision QA step |
 | `data/` | reference cards (`cards/`), catalog `cards.csv`, set list `sets.csv`, category example strips |
 | `docs/` | API key guide, work plan, Miro board notes |
@@ -77,7 +98,7 @@ Categories: 1 floating object on a flat patterned background · 2 object on a pl
 
 ## Cost
 
-`gemini-3.1-flash-image` at 1K ≈ $0.045 per image; `gpt-image-2.5-flare` at medium quality ≈ $0.03–0.06. A set with 4 candidates per card ≈ $1.5–2.5; a 16-set collection with 3 variants ≈ $25–40. Neither API uses your prompts or images for training on paid usage.
+`gemini-3.1-flash-image` at 1K ≈ $0.067 per image; `gpt-image-2.5-flare` at medium quality ≈ $0.03–0.06. A set with 4 candidates per card ≈ $1.5–2.5; a 16-set collection with 3 variants ≈ $25–40. Neither API uses your prompts or images for training on paid usage.
 
 ## License
 
