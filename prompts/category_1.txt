@@ -1,1 +1,1 @@
-CATEGORY 1 — floating object. Object: {object}. The object floats in mid-air, no ground, no surface, no horizon, no environment. Background: flat {bg_color} with {bg_pattern}, very subtle gradient, no other elements. Keep the object simple with no small details.
+CATEGORY 1 — floating object. Object: {object}. The object floats in mid-air, no ground, no surface, no horizon, no environment. Background: flat {bg_color} with {bg_pattern}, no other elements. Keep the object simple with no small details.
