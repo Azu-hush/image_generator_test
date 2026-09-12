@@ -33,11 +33,10 @@ npm run demo
 
 1. Сохранить ключ: `setx OPENAI_API_KEY "..."` (или `GEMINI_API_KEY`) и перезапустить терминал.
 2. `node backends/openai.mjs --plan examples/summer_fishing.plan.json` → 40 кандидатов в `out/summer/fishing/candidates/` (для дешёвого первого прогона добавить `--candidates 2`).
-3. `node scripts/fit.mjs --set out/summer/fishing` → обрезает каждого кандидата по центру до пропорции карты 430:480 (с `--size card` ровно 430×480); генераторы отдают 4:5, 2:3 или 1:1.
-4. `node scripts/qa-template.mjs --set out/summer/fishing` → оценить кандидатов в `qa.json` (в скилле это делает Claude).
-5. `node scripts/assemble.mjs --set out/summer/fishing --variants 3` → `out/summer/fishing/variants/index.html`.
+3. `node scripts/qa-template.mjs --set out/summer/fishing` → оценить кандидатов в `qa.json` (в скилле это делает Claude).
+4. `node scripts/assemble.mjs --set out/summer/fishing --variants 3` → `out/summer/fishing/variants/index.html`.
 
-Один раз `npm.cmd install`: ставит `sharp`, который нужен `fit` и `assemble` для обрезки до размера карты 430 × 480.
+Один раз `npm.cmd install`: ставит `sharp`. Каждый шаг QA и каждый прогон API-бэкенда сначала автоматически обрезает кандидатов по центру до пропорции карты 430:480 (генераторы отдают 4:5, 2:3 или 1:1; оригиналы сохраняются в `candidates_src/`). `node scripts/fit.mjs --set <set> [--size card]` делает то же вручную или приводит ровно к 430 × 480; `assemble` всегда выдаёт 430 × 480.
 
 ## Смена модели под этап
 

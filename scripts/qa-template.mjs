@@ -5,11 +5,13 @@
 //   node scripts/qa-template.mjs --set out/summer/fishing
 import fs from "node:fs";
 import path from "node:path";
+import { fitSet } from "../lib/fit.mjs";
 
 const args = Object.fromEntries(process.argv.slice(2).map((a, i, arr) => a.startsWith("--") ? [a.slice(2), arr[i + 1]] : []).filter(Boolean));
 if (!args.set) { console.error("usage: node scripts/qa-template.mjs --set <out/collection/set>"); process.exit(1); }
 
 const setDir = path.resolve(args.set);
+await fitSet(setDir); // candidates must be in card aspect before anyone judges centering
 const plan = JSON.parse(fs.readFileSync(path.join(setDir, "plan.json"), "utf8"));
 const candDir = path.join(setDir, "candidates");
 const files = fs.existsSync(candDir) ? fs.readdirSync(candDir).filter((f) => /\.(png|jpe?g|webp)$/i.test(f)).sort() : [];

@@ -11,11 +11,13 @@ import { ROOT } from "../lib/plan.mjs";
 import { resolveStage, describeStage } from "../lib/config.mjs";
 import { chat, parseJson } from "../lib/llm.mjs";
 import { parseArgs } from "../lib/run.mjs";
+import { fitSet } from "../lib/fit.mjs";
 
 const args = parseArgs(process.argv.slice(2));
 if (!args.set) { console.error("usage: node scripts/qa.mjs --set <out/collection/set> [--provider p] [--model m] [--cards 1,2] [--force]"); process.exit(1); }
 
 const setDir = path.resolve(args.set);
+await fitSet(setDir); // normalise shapes first so centering is judged in the real card frame
 const plan = JSON.parse(fs.readFileSync(path.join(setDir, "plan.json"), "utf8"));
 const stage = resolveStage("qa", { cli: { provider: args.provider, model: args.model }, plan });
 const candDir = path.join(setDir, "candidates");

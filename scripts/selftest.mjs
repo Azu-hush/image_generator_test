@@ -129,10 +129,19 @@ t = await run("backends/gemini.mjs", ["--plan", PLAN, "--out", OUT, "--cards", "
 ok("backend retries after HTTP 500", t.code === 0 && fs.existsSync(path.join(OUT, "summer", "fishing", "candidates", "02_tackle_box_1.png")) && /ok/.test(t.out), t.out.slice(-200));
 
 const setDir = path.join(OUT, "summer", "fishing");
+{
+  const sharp = (await import("sharp")).default;
+  const odd = path.join(setDir, "candidates", "03_rod_1.jpg");
+  await sharp({ create: { width: 600, height: 900, channels: 3, background: "#ffcc00" } }).jpeg().toFile(odd);
+  t = await run("scripts/qa-template.mjs", ["--set", setDir]);
+  const fitted = path.join(setDir, "candidates", "03_rod_1.png");
+  const meta = fs.existsSync(fitted) ? await sharp(fitted).metadata() : null;
+  ok("qa auto-fits odd aspect candidates to 430:480", t.code === 0 && meta && Math.abs(meta.width / meta.height - 430 / 480) < 0.01 && !fs.existsSync(odd) && fs.existsSync(path.join(setDir, "candidates_src", "03_rod_1.jpg")), t.out.slice(-200));
+}
 for (const prov of ["anthropic", "openai", "gemini"]) {
   t = await run("scripts/qa.mjs", ["--set", setDir, "--provider", prov, "--force"]);
   const qa = JSON.parse(fs.readFileSync(path.join(setDir, "qa.json"), "utf8"));
-  ok(`qa via ${prov} scores all candidates`, t.code === 0 && qa.items.length === 4 && qa.items.every((i) => i.pass === true && i.judge.startsWith(prov)), t.out.slice(-300));
+  ok(`qa via ${prov} scores all candidates`, t.code === 0 && qa.items.length === 5 && qa.items.every((i) => i.pass === true && i.judge.startsWith(prov)), t.out.slice(-300));
 }
 
 for (const prov of ["anthropic", "openai", "gemini"]) {

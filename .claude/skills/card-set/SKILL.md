@@ -37,8 +37,7 @@ Compare generators: `node scripts/compare.mjs --plan <plan> --backends openai,ge
 
 ## Step 3 — QA
 
-First normalise shapes: `node scripts/fit.mjs --set out/<c>/<set>` (centre-crops every candidate to the 430:480 card aspect, originals kept in `candidates_src/`). Manual-mode images from ChatGPT arrive as 2:3 or 1:1; fit them before scoring so centering is judged on the real card frame.
-
+Shapes are normalised automatically: `qa.mjs`, `qa-template.mjs` and the API backends centre-crop every candidate to the 430:480 card aspect before anything else (originals in `candidates_src/`). Only for a forced exact 430×480 run `node scripts/fit.mjs --set ... --size card`.
 
 Preferred: `node scripts/qa.mjs --set out/<c>/<set> [--provider p] [--model m]` → scores into `qa.json` with `judge` recorded.
 Fallback (exit 2): `node scripts/qa-template.mjs --set ...`, then look at every candidate with the Read tool, compare with `data/rules/category_N_examples.png` and the refs, score per `qa/checklist.md`, write scores/pass/notes into `qa.json`, set `judge` to `claude-code/in-session`.
