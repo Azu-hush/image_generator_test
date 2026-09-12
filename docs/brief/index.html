@@ -1,0 +1,367 @@
+<!doctype html><html lang="ru"><head><meta charset="utf-8"><title>Генератор артов карточек</title>
+<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Rubik:wght@500;700&family=IBM+Plex+Sans:wght@400;500;600&family=JetBrains+Mono:wght@400;500&display=swap">
+<style>
+  :root {
+    --paper: #F5F7FB;
+    --paper-2: #FFFFFF;
+    --ink: #1B2233;
+    --ink-2: #4B5568;
+    --ink-3: #7C8699;
+    --line: #DCE1EA;
+    --accent: #0E8F8A;
+    --accent-ink: #0B6F6B;
+    --accent-soft: #DDF3F1;
+    --gold: #D99A00;
+    --gold-soft: #FFF3D1;
+    --code-bg: #EAF0F7;
+    --c1: #FF8A3D; --c2: #2E7DE9; --c3: #7A4FD6; --c4: #2AA84A;
+  }
+  @media (prefers-color-scheme: dark) {
+    :root:not([data-theme="light"]) {
+      --paper: #121722; --paper-2: #1A2130; --ink: #ECF0F7; --ink-2: #B8C0D0; --ink-3: #8691A5;
+      --line: #2A3344; --accent: #3CC7C0; --accent-ink: #7BDDD8; --accent-soft: #163A39;
+      --gold: #F2B838; --gold-soft: #3A2E12; --code-bg: #0E121B;
+    }
+  }
+  :root[data-theme="dark"] {
+    --paper: #121722; --paper-2: #1A2130; --ink: #ECF0F7; --ink-2: #B8C0D0; --ink-3: #8691A5;
+    --line: #2A3344; --accent: #3CC7C0; --accent-ink: #7BDDD8; --accent-soft: #163A39;
+    --gold: #F2B838; --gold-soft: #3A2E12; --code-bg: #0E121B;
+  }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0; background: var(--paper); color: var(--ink);
+    font: 16px/1.55 "IBM Plex Sans", "Segoe UI", system-ui, sans-serif;
+    font-variant-numeric: tabular-nums;
+  }
+  main { max-width: 860px; margin: 0 auto; padding: 48px 24px 80px; }
+  h1, h2, h3 { font-family: Rubik, "Segoe UI", system-ui, sans-serif; text-wrap: balance; margin: 0; }
+  h1 { font-size: 40px; line-height: 1.1; font-weight: 700; letter-spacing: -0.01em; }
+  h2 { font-size: 24px; font-weight: 700; margin-bottom: 14px; }
+  h3 { font-size: 17px; font-weight: 700; }
+  p { margin: 0 0 12px; max-width: 68ch; color: var(--ink); }
+  a { color: var(--accent-ink); text-decoration-thickness: 1px; text-underline-offset: 3px; }
+  a:focus-visible, button:focus-visible { outline: 2px solid var(--accent); outline-offset: 2px; }
+  code, pre { font-family: "JetBrains Mono", Consolas, monospace; font-size: 13.5px; }
+  code { background: var(--code-bg); padding: 1px 6px; border-radius: 4px; }
+  pre { background: var(--code-bg); padding: 12px 14px; border-radius: 8px; overflow-x: auto; margin: 8px 0 12px; line-height: 1.5; }
+  pre code { background: none; padding: 0; }
+  .eyebrow { font-family: Rubik, sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.12em; text-transform: uppercase; color: var(--accent-ink); margin-bottom: 8px; }
+  .lede { font-size: 19px; line-height: 1.5; color: var(--ink-2); max-width: 62ch; margin-top: 16px; }
+  .meta { display: flex; flex-wrap: wrap; gap: 8px 22px; margin-top: 22px; font-size: 14px; color: var(--ink-2); }
+  .meta b { color: var(--ink); font-weight: 600; }
+  section { padding: 40px 0 8px; border-top: 1px solid var(--line); margin-top: 40px; }
+  .frame { font-family: Rubik, sans-serif; font-size: 12px; font-weight: 500; letter-spacing: 0.1em; text-transform: uppercase; color: var(--ink-3); margin-bottom: 6px; }
+
+  /* pipeline */
+  .steps { display: grid; gap: 14px; margin-top: 8px; counter-reset: s; }
+  .step { display: grid; grid-template-columns: 44px 1fr; gap: 14px; align-items: start; }
+  .step .n { font-family: Rubik, sans-serif; font-weight: 700; font-size: 20px; width: 44px; height: 44px; border-radius: 12px; display: grid; place-items: center; background: var(--accent-soft); color: var(--accent-ink); }
+  .step p { margin: 2px 0 0; color: var(--ink-2); font-size: 15.5px; }
+  .step h3 { margin-top: 8px; }
+
+  /* categories */
+  .cats { display: grid; grid-template-columns: repeat(5, 1fr); gap: 10px; margin-top: 6px; }
+  .cat { background: var(--paper-2); border: 1px solid var(--line); border-radius: 10px; padding: 12px 12px 10px; font-size: 13.5px; line-height: 1.4; color: var(--ink-2); }
+  .cat .tag { display: inline-block; font-family: Rubik, sans-serif; font-weight: 700; font-size: 12px; letter-spacing: 0.06em; color: #fff; padding: 2px 8px; border-radius: 6px; margin-bottom: 8px; }
+  .cat b { display: block; color: var(--ink); margin-bottom: 4px; }
+  .t1 { background: var(--c1); } .t2 { background: var(--c2); } .t3 { background: var(--c3); } .t4 { background: var(--c4); } .t5 { background: var(--gold); }
+  .cat.gold { border-color: var(--gold); background: var(--gold-soft); }
+
+  /* diagram */
+  .diagram { background: var(--paper-2); border: 1px solid var(--line); border-radius: 12px; padding: 10px; overflow-x: auto; margin-top: 8px; }
+  .diagram svg { display: block; min-width: 720px; width: 100%; height: auto; }
+  .diagram text { font-family: "IBM Plex Sans", "Segoe UI", sans-serif; fill: var(--ink); }
+  .diagram .box { fill: var(--paper); stroke: var(--line); }
+  .diagram .brain { fill: var(--accent-soft); stroke: var(--accent); }
+  .diagram .hands { fill: var(--gold-soft); stroke: var(--gold); }
+  .diagram .sub { fill: var(--paper-2); stroke: var(--line); }
+  .diagram .muted { fill: var(--ink-3); }
+  .diagram .arrow { stroke: var(--ink-2); stroke-width: 1.6; fill: none; marker-end: url(#ah); }
+  .diagram .ahead { fill: var(--ink-2); }
+  .diagram .lbl { font-family: Rubik, sans-serif; font-weight: 700; }
+
+  /* test scenarios */
+  .tests { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-top: 8px; }
+  .test { background: var(--paper-2); border: 1px solid var(--line); border-radius: 12px; padding: 16px; display: flex; flex-direction: column; gap: 8px; }
+  .test.primary { border-color: var(--accent); box-shadow: 0 0 0 3px var(--accent-soft); }
+  .test .cost { font-family: Rubik, sans-serif; font-weight: 500; font-size: 13px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--accent-ink); }
+  .test ol { margin: 0; padding-left: 20px; color: var(--ink-2); font-size: 14.5px; display: grid; gap: 6px; }
+  .test .checks { margin-top: auto; font-size: 13.5px; color: var(--ink-3); padding-top: 6px; border-top: 1px dashed var(--line); }
+
+  table { border-collapse: collapse; width: 100%; font-size: 14.5px; margin-top: 6px; }
+  th, td { text-align: left; padding: 9px 10px; border-bottom: 1px solid var(--line); vertical-align: top; }
+  th { font-family: Rubik, sans-serif; font-weight: 500; font-size: 12.5px; letter-spacing: 0.06em; text-transform: uppercase; color: var(--ink-3); }
+  td:first-child { font-weight: 600; white-space: nowrap; }
+  .wrap { overflow-x: auto; }
+  ul.plain { padding-left: 20px; margin: 0; display: grid; gap: 8px; color: var(--ink-2); }
+  ul.plain li::marker { color: var(--accent); }
+  .note { background: var(--gold-soft); border-left: 3px solid var(--gold); padding: 10px 14px; border-radius: 0 8px 8px 0; font-size: 14.5px; color: var(--ink); margin-top: 14px; }
+  .two { display: grid; grid-template-columns: 1fr 1fr; gap: 24px; }
+  footer { margin-top: 48px; padding-top: 18px; border-top: 1px solid var(--line); font-size: 13.5px; color: var(--ink-3); display: flex; gap: 20px; flex-wrap: wrap; }
+  @media (max-width: 760px) {
+    h1 { font-size: 32px; }
+    .cats { grid-template-columns: repeat(2, 1fr); }
+    .tests { grid-template-columns: 1fr; }
+    .two { grid-template-columns: 1fr; }
+  }
+  @media (prefers-reduced-motion: no-preference) { a { transition: color .15s; } }
+</style>
+
+<style>
+  @page { size: A4; margin: 16mm 14mm 18mm 14mm; }
+  html { color-scheme: light only; }
+  :root { --paper:#FFFFFF; --paper-2:#F7F9FC; }
+  body { background:#fff; font-size: 10.5pt; }
+  main { max-width: none; padding: 0; }
+  h1 { font-size: 26pt; } h2 { font-size: 16pt; } h3 { font-size: 12pt; }
+  .lede { font-size: 12pt; }
+  section { break-before: auto; margin-top: 28px; padding-top: 22px; border-top: 1px solid var(--line); }
+  section.pb { break-before: page; border-top: 0; margin-top: 0; padding-top: 0; }
+  .steps { break-inside: auto; }
+  .cats { grid-template-columns: repeat(5, 1fr) !important; break-inside: avoid; } .cat { font-size: 8.5pt; padding: 9px; }
+  .tests { break-inside: auto; } .note { break-inside: avoid; margin: 0 0 14px; }
+  .frame { break-after: avoid; } h2 { break-after: avoid; } .frame + h2 + p { break-after: avoid; }
+  pre { white-space: pre-wrap; word-break: break-all; overflow: visible; } h2, h3 { break-after: avoid; }
+  .step, .cat, .test, tr, pre, .note, .two { break-inside: avoid; }
+  .test ol { font-size: 9.5pt; }
+  .diagram svg { min-width: 0; }
+  .diagram, .wrap { overflow: visible; }
+  table { font-size: 9.5pt; } th, td { padding: 5px 7px; }
+  code, pre { font-size: 9pt; }
+  footer { break-inside: avoid; }
+</style></head><body><main>
+  <header>
+    <div class="eyebrow">Прототип · сентябрь 2026</div>
+    <h1>Генератор артов для коллекционных карточек</h1>
+    <p class="lede">Инструмент принимает тему набора и пожелания продюсера, а отдаёт 3–5 вариантов набора из 10 карточек: картинки объектов в пропорции игровой карты, контакт-листы и отчёт контроля качества. Вёрстка окон не делается, картинки подставляются в игру вручную.</p>
+    <div class="meta">
+      <span><b>Репозиторий</b> <a href="https://github.com/Azu-hush/image_generator_test">github.com/Azu-hush/image_generator_test</a></span>
+      <span><b>Стек</b> Claude Code + Node 20; модели Anthropic, OpenAI, Gemini на выбор для каждого этапа</span>
+      <span><b>Формат карты</b> 430 × 480 px</span>
+    </div>
+  </header>
+
+  <section>
+    <div class="frame">Фрейм 1</div>
+    <h2>Как устроен пайплайн</h2>
+    <p>Разделили «мозг» и «руки». Мозг: Claude в роли арт-директора планирует, пишет промпты, отсматривает результат и собирает варианты. Руки: сменный бэкенд генерации картинок. Без API-ключа тот же пайплайн работает в режиме репетиции и вместо картинок выдаёт пакет промптов для ручной генерации.</p>
+
+    <div class="diagram">
+      <svg viewBox="0 0 900 300" role="img" aria-label="Схема пайплайна: продюсер, мозг на Claude, руки-бэкенд, выход 3–5 вариантов сета">
+        <defs><marker id="ah" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse"><path d="M0 0L10 5L0 10z" class="ahead"/></marker></defs>
+        <rect x="10" y="105" width="130" height="90" rx="12" class="box"/>
+        <text x="75" y="138" text-anchor="middle" class="lbl" font-size="14">Продюсер</text>
+        <text x="75" y="160" text-anchor="middle" font-size="13" class="muted">тема сета</text>
+        <text x="75" y="178" text-anchor="middle" font-size="13" class="muted">пожелания</text>
+
+        <rect x="175" y="30" width="300" height="240" rx="14" class="brain"/>
+        <text x="325" y="56" text-anchor="middle" class="lbl" font-size="14">Мозг: Claude Code, скилл /card-set</text>
+        <rect x="190" y="72" width="270" height="36" rx="8" class="sub"/><text x="325" y="95" text-anchor="middle" font-size="13">1. План сета → plan.json</text>
+        <rect x="190" y="116" width="270" height="36" rx="8" class="sub"/><text x="325" y="139" text-anchor="middle" font-size="13">2. Промпт = стиль + категория + референсы</text>
+        <rect x="190" y="160" width="270" height="36" rx="8" class="sub"/><text x="325" y="183" text-anchor="middle" font-size="13">4. Визуальное QA кандидатов → qa.json</text>
+        <rect x="190" y="204" width="270" height="36" rx="8" class="sub"/><text x="325" y="227" text-anchor="middle" font-size="13">5. Сборка вариантов + контакт-листы</text>
+        <text x="325" y="258" text-anchor="middle" font-size="12" class="muted">данные: styleguide · prompts · 35 референсов · чеклист QA</text>
+
+        <rect x="520" y="30" width="230" height="240" rx="14" class="hands"/>
+        <text x="635" y="56" text-anchor="middle" class="lbl" font-size="14">Руки: бэкенд генерации</text>
+        <rect x="535" y="72" width="200" height="52" rx="8" class="sub"/>
+        <text x="635" y="93" text-anchor="middle" font-size="13" font-weight="600">gemini.mjs · openai.mjs</text>
+        <text x="635" y="112" text-anchor="middle" font-size="12" class="muted">API с референс-картинками</text>
+        <rect x="535" y="134" width="200" height="52" rx="8" class="sub"/>
+        <text x="635" y="155" text-anchor="middle" font-size="13" font-weight="600">manual.mjs</text>
+        <text x="635" y="174" text-anchor="middle" font-size="12" class="muted">пакет промптов, бесплатно, руками</text>
+        <rect x="535" y="196" width="200" height="52" rx="8" class="sub" stroke-dasharray="4 3"/>
+        <text x="635" y="217" text-anchor="middle" font-size="13" class="muted">comfyui (заглушка)</text>
+        <text x="635" y="236" text-anchor="middle" font-size="12" class="muted">локально, нужна GPU 12 ГБ+</text>
+
+        <rect x="785" y="105" width="105" height="90" rx="12" class="box"/>
+        <text x="837" y="134" text-anchor="middle" class="lbl" font-size="14">3–5 вариантов</text>
+        <text x="837" y="156" text-anchor="middle" font-size="12" class="muted">10 PNG в каждом</text>
+        <text x="837" y="174" text-anchor="middle" font-size="12" class="muted">контакт-листы</text>
+
+        <path d="M140 150 H175" class="arrow"/>
+        <path d="M460 134 H520" class="arrow"/>
+        <text x="490" y="126" text-anchor="middle" font-size="11" class="muted">3. N кандидатов</text>
+        <path d="M520 178 H460" class="arrow"/>
+        <path d="M750 150 H785" class="arrow"/>
+      </svg>
+    </div>
+
+    <div class="steps" style="margin-top:22px">
+      <div class="step"><div class="n">1</div><div><h3>План сета</h3><p>Claude раскладывает 10 карт по правилам с доски: категории 1–4 для объектов, категория 5 для золотых карт с персонажами, разные фоны у соседних карт, никаких повторов внутри коллекции. Результат: <code>plan.json</code>, его проверяет валидатор.</p></div></div>
+      <div class="step"><div class="n">2</div><div><h3>Промпт на карту</h3><p>Базовое описание стиля, шаблон своей категории, описание объекта, запреты (текст, логотипы, рамки, мелкие детали) и 2–3 референсные карточки того же типа. Золотым картам добавляются референсы персонажей.</p></div></div>
+      <div class="step"><div class="n">3</div><div><h3>Генерация</h3><p>Gemini или OpenAI через API с референс-картинками, по 4 кандидата на карту. Без ключа тот же промпт выдаётся файлом <code>prompt-pack.html</code> для ручной генерации в любом сервисе.</p></div></div>
+      <div class="step"><div class="n">4</div><div><h3>Контроль качества</h3><p>Claude смотрит каждого кандидата по чеклисту: объект по центру, категория соблюдена, стиль совпадает, нет текста и артефактов, читается в миниатюре, персонаж узнаваем. Провалившиеся карты перегенерируются.</p></div></div>
+      <div class="step"><div class="n">5</div><div><h3>Сборка вариантов</h3><p>Первый вариант из лучших картинок, второй из вторых по оценке и так далее. Плюс контакт-листы в раскладке игрового окна и итоговый отчёт.</p></div></div>
+    </div>
+
+    <p style="margin-top:20px">Всё вместе запускается одной командой скилла в Claude Code:</p>
+    <pre><code>/card-set Summer "Camping" "уютное настроение, тёплые цвета, одна золотая карта с петухом"</code></pre>
+  </section>
+
+  <section>
+    <div class="frame">Фрейм 2</div>
+    <h2>Правила категорий, зашитые в промпты</h2>
+    <p>В каждом сете присутствуют все четыре категории объектов вне зависимости от редкости. Для каждой свой шаблон промпта и свои эталонные карточки из выгрузки.</p>
+    <div class="cats">
+      <div class="cat"><span class="tag t1">Кат. 1</span><b>В воздухе</b>Объект висит, фон плоский с простым узором: лучи, круги, полосы.</div>
+      <div class="cat"><span class="tag t2">Кат. 2</span><b>На простом полу</b>Объект стоит, позади ровный задник с градиентом или узором.</div>
+      <div class="cat"><span class="tag t3">Кат. 3</span><b>На реальной поверхности</b>Дерево, трава, плитка; задник по-прежнему простой.</div>
+      <div class="cat"><span class="tag t4">Кат. 4</span><b>В окружении</b>Упрощённая реалистичная сцена, объект остаётся центральным.</div>
+      <div class="cat gold"><span class="tag t5">Кат. 5</span><b>Золотая карта</b>1–2 персонажа разыгрывают ироничную сценку на фоне категории 4.</div>
+    </div>
+  </section>
+
+  <section class="pb">
+    <div class="frame">Фрейм 3</div>
+    <h2>Как протестировать</h2>
+    <p>Три сценария от бесплатного к полному. Первый проверяет промпты и правила, второй весь автоматический цикл, третий инструмент глазами продюсера.</p>
+    <div class="note">Подписка ChatGPT Plus ключа API не даёт. Нужен ключ с platform.openai.com и предоплаченный баланс на нём. Ключ хранится только в переменной окружения и в репозиторий не попадает.</div>
+    <div class="tests">
+      <div class="test">
+        <h3>Без ключа</h3>
+        <div class="cost">бесплатно · 10 минут</div>
+        <ol>
+          <li>В папке проекта: <code>node backends/manual.mjs --plan examples/summer_fishing.plan.json</code></li>
+          <li>Открыть <code>out/summer/fishing/prompt-pack.html</code>. У каждой карты кнопка «copy prompt» и референсы в папке <code>refs</code>.</li>
+          <li>В ChatGPT или Google AI Studio приложить референсы, вставить промпт, попросить вертикальную картинку 4:5.</li>
+          <li>Сделать 3–4 карты разных категорий и сравнить с оригиналами из <code>data/cards</code>.</li>
+        </ol>
+        <div class="checks">Проверяет: попадание в стиль, соблюдение категорий, качество промптов.</div>
+      </div>
+      <div class="test primary">
+        <h3>С ключом API</h3>
+        <div class="cost">около $1 · 15 минут</div>
+        <ol>
+          <li>Ключ OpenAI с platform.openai.com (нужен баланс) или Gemini (нужен биллинг). Гайды в <code>docs/</code>.</li>
+          <li><code>setx OPENAI_API_KEY "..."</code>, перезапустить терминал.</li>
+          <li>Бенчмарк, 20 картинок: <code>node backends/openai.mjs --plan examples/summer_coolness_remake.plan.json --candidates 2</code></li>
+          <li>Сравнить <code>out/summer/coolness/candidates</code> с оригинальными картами 41–50.</li>
+          <li><code>node scripts/qa-template.mjs --set out/summer/coolness</code>, затем <code>node scripts/assemble.mjs --set out/summer/coolness</code>, открыть <code>variants/index.html</code>.</li>
+        </ol>
+        <div class="checks">Проверяет: автоматический цикл, стоимость, лимиты, сборку вариантов.</div>
+      </div>
+      <div class="test">
+        <h3>Полный цикл</h3>
+        <div class="cost">$2–3 за сет · 20 минут</div>
+        <ol>
+          <li>Открыть репозиторий в Claude Code с ключом в окружении.</li>
+          <li>Написать <code>/card-set</code> с новой темой и пожеланиями.</li>
+          <li>Claude спланирует сет и покажет таблицу, сгенерирует, отсмотрит кандидатов и отдаст три варианта с контакт-листами и отчётом.</li>
+          <li>Попросить перегенерировать одну карту с комментарием, проверить цикл правок.</li>
+        </ol>
+        <div class="checks">Проверяет: инструмент «под ключ» глазами продюсера, консистентность персонажей на золотых картах.</div>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="frame">Фрейм 4</div>
+    <h2>Модели по этапам: выбор, цена, качество</h2>
+    <p>За тремя этапами стоит модель, и каждую можно сменить: планировщик (текст), генерация (картинки), контроль качества (зрение). Умолчание задаёт <code>config.json</code>, его перекрывают флаги и переменные окружения, а выше всех стоит пожелание продюсера в команде: «картинки через Gemini Pro, проверку подешевле» скилл переводит в настройки сам. Какая модель делала этап, записывается в файлы результата.</p>
+    <p>Цены сверены со страницами провайдеров 12.09.2026. Оценка качества экспертная, для нашей задачи: игрушечный 3D-стиль, референсы, персонажи, отсутствие текста. Замер даёт команда сравнения на одном плане.</p>
+
+    <h3 style="margin:18px 0 8px">Планировщик сета</h3>
+    <div class="wrap"><table>
+      <tr><th>Модель</th><th>$ за 1M вход / выход</th><th>≈ за сет</th><th>Качество</th><th>Комментарий</th></tr>
+      <tr><td>claude-opus-5</td><td>5 / 25</td><td>$0.10</td><td>★★★★★</td><td>лучше всех держит правила категорий; умолчание</td></tr>
+      <tr><td>claude-sonnet-5</td><td>2 / 10</td><td>$0.04</td><td>★★★★</td><td>почти тот же план, в 2.5 раза дешевле</td></tr>
+      <tr><td>gpt-5.6-sol</td><td>4 / 20</td><td>$0.08</td><td>★★★★★</td><td>флагманский класс OpenAI</td></tr>
+      <tr><td>gpt-5.6-terra</td><td>2 / 12</td><td>$0.05</td><td>★★★★</td><td>сбалансированный</td></tr>
+      <tr><td>gpt-5.6-luna</td><td>0.2 / 1.2</td><td>$0.005</td><td>★★★</td><td>самый дешёвый рабочий</td></tr>
+      <tr><td>gemini-3.8-flash</td><td>0.75 / 3.75</td><td>$0.016</td><td>★★★★</td><td>акция до конца 2026</td></tr>
+      <tr><td>claude-haiku-4-5</td><td>1 / 5</td><td>$0.02</td><td>★★★</td><td>черновики</td></tr>
+    </table></div>
+    <p style="margin-top:10px;color:var(--ink-2)">Экономить здесь нечего: коллекция из 16 сетов на Opus стоит около двух долларов.</p>
+
+    <h3 style="margin:18px 0 8px">Генерация картинок</h3>
+    <div class="wrap"><table>
+      <tr><th>Модель</th><th>≈ за картинку</th><th>Референсы</th><th>Качество</th><th>Комментарий</th></tr>
+      <tr><td>gpt-image-2.5-flare</td><td>$0.03–0.06</td><td>до 16, высокая точность</td><td>★★★★★</td><td>лучше всех держит персонажей; умолчание, бэкенд готов</td></tr>
+      <tr><td>gemini-3-pro-image</td><td>$0.134</td><td>6 объектов, 5 персонажей, 3 стиля</td><td>★★★★★</td><td>максимум качества у Google, вдвое дороже</td></tr>
+      <tr><td>gemini-3.1-flash-image</td><td>$0.067</td><td>10 объектов, 4 персонажа, 3 стиля</td><td>★★★★</td><td>слоты под персонажей и стиль; бэкенд готов</td></tr>
+      <tr><td>gemini-3.1-flash-lite-image</td><td>$0.034</td><td>14 объектов, без персонажей</td><td>★★★</td><td>дешёвые объектные карты</td></tr>
+      <tr><td>FLUX.2 pro (fal.ai)</td><td>$0.03</td><td>несколько картинок</td><td>★★★★</td><td>мультиреференсные правки; бэкенд не написан</td></tr>
+      <tr><td>FLUX Kontext pro (fal.ai)</td><td>$0.04</td><td>одна картинка</td><td>★★★★</td><td>точные правки одной карты</td></tr>
+      <tr><td>Seedream v4 (fal.ai)</td><td>$0.03</td><td>редактирование</td><td>★★★</td><td>дёшево, слабее на персонажах</td></tr>
+      <tr><td>Ideogram v3 (fal.ai)</td><td>$0.03–0.09</td><td>стилевые</td><td>★★★</td><td>чистая графика, персонажи плывут</td></tr>
+      <tr><td>Recraft v3 (fal.ai)</td><td>$0.04</td><td>только пресеты</td><td>★★★</td><td>без референсов</td></tr>
+      <tr><td>Midjourney v7</td><td>подписка $10–60/мес</td><td>--sref, --cref</td><td>★★★★</td><td>без API, только ручной режим</td></tr>
+      <tr><td>FLUX.1 dev / SDXL + LoRA локально</td><td>бесплатно, GPU 12 ГБ+</td><td>LoRA, IP-Adapter</td><td>★★★★</td><td>лучший долгосрочный вариант при многих коллекциях</td></tr>
+    </table></div>
+    <p style="margin-top:10px;color:var(--ink-2)">Для золотых карт реальный выбор между gpt-image-2.5 и gemini-3-pro-image. Для объектных карт категорий 1–3 годятся дешёвые модели, смешанная стратегия «дорогая для золотых, дешёвая для объектов» снижает цену сета почти вдвое. Бесплатного API-тира для картинок нет ни у кого.</p>
+
+    <h3 style="margin:18px 0 8px">Контроль качества</h3>
+    <div class="wrap"><table>
+      <tr><th>Модель</th><th>$ за 1M вход / выход</th><th>≈ за 40 кандидатов</th><th>Качество</th><th>Комментарий</th></tr>
+      <tr><td>claude-sonnet-5</td><td>2 / 10</td><td>$0.60</td><td>★★★★★</td><td>надёжно ловит категории и дрейф персонажей; умолчание</td></tr>
+      <tr><td>claude-opus-5</td><td>5 / 25</td><td>$1.60</td><td>★★★★★</td><td>только для спорных золотых карт</td></tr>
+      <tr><td>gpt-5.6-terra</td><td>2 / 12</td><td>$0.64</td><td>★★★★</td><td>хороший визуальный судья</td></tr>
+      <tr><td>gemini-3.8-flash</td><td>0.75 / 3.75</td><td>$0.24</td><td>★★★★</td><td>быстро находит текст и артефакты</td></tr>
+      <tr><td>gpt-5.6-luna</td><td>0.2 / 1.2</td><td>$0.08</td><td>★★★</td><td>самый дешёвый судья</td></tr>
+      <tr><td>gemini-3.5-flash-lite</td><td>0.3 / 2.5</td><td>$0.12</td><td>★★★</td><td>массовый предфильтр</td></tr>
+    </table></div>
+
+    <h3 style="margin:18px 0 8px">Стоимость сета при разных наборах</h3>
+    <div class="wrap"><table>
+      <tr><th>Набор</th><th>План</th><th>Картинки, 40</th><th>QA, 40</th><th>Итого</th></tr>
+      <tr><td>Умолчание: Opus 5 + gpt-image-2.5 + Sonnet 5</td><td>$0.10</td><td>$1.8</td><td>$0.60</td><td>≈ $2.5</td></tr>
+      <tr><td>Максимум: Opus 5 + gemini-3-pro-image + Opus 5</td><td>$0.10</td><td>$5.4</td><td>$1.60</td><td>≈ $7</td></tr>
+      <tr><td>Эконом: gemini-3.8-flash + flash-lite-image + gemini-3.8-flash</td><td>$0.02</td><td>$1.4</td><td>$0.24</td><td>≈ $1.7</td></tr>
+      <tr><td>Смешанный: gpt-image-2.5 для золотых, lite для объектов</td><td>$0.10</td><td>$1.2</td><td>$0.60</td><td>≈ $1.9</td></tr>
+    </table></div>
+    <pre style="margin-top:14px"><code>node scripts/models.mjs
+node scripts/compare.mjs --plan examples/summer_coolness_remake.plan.json --backends openai,gemini:gemini-3-pro-image --cards 1,3,7,10</code></pre>
+  </section>
+
+  <section>
+    <div class="frame">Фрейм 5</div>
+    <h2>Критерии успеха и стоимость</h2>
+    <div class="two">
+      <div>
+        <h3 style="margin-bottom:10px">Тест считаем успешным, если</h3>
+        <ul class="plain">
+          <li>Не менее 7 из 10 карт Coolness проходят QA без правок и визуально ложатся рядом с оригиналами.</li>
+          <li>Персонажи на золотых картах Fishing узнаются как те же, что на референсах.</li>
+          <li>Сет с 4 кандидатами на карту укладывается в 2–3 доллара.</li>
+        </ul>
+      </div>
+      <div class="wrap">
+        <h3 style="margin-bottom:10px">Ориентир по цене</h3>
+        <table>
+          <tr><th>Что</th><th>Стоимость</th></tr>
+          <tr><td>Картинка, gpt-image-2.5, среднее качество</td><td>≈ $0.03–0.06</td></tr>
+          <tr><td>Картинка, Gemini 3.1 Flash Image</td><td>≈ $0.067</td></tr>
+          <tr><td>Сет с умолчаниями, план + 40 картинок + QA</td><td>≈ $2.5</td></tr>
+          <tr><td>Коллекция, 16 сетов × 3 варианта</td><td>≈ $27–110 в зависимости от набора моделей</td></tr>
+        </table>
+      </div>
+    </div>
+  </section>
+
+  <section>
+    <div class="frame">Фрейм 6</div>
+    <h2>Что сделано и что дальше</h2>
+    <div class="wrap">
+      <table>
+        <tr><th>Этап</th><th>Статус</th><th>Результат</th></tr>
+        <tr><td>Материалы с Miro, выбор подхода</td><td>готово</td><td>35 карт размечены по сетам и категориям, правила зафиксированы</td></tr>
+        <tr><td>Стайл-гайд и промпты</td><td>готово</td><td>описание стиля, лист персонажей, шаблоны по категориям, схема плана</td></tr>
+        <tr><td>Пайплайн без ключа</td><td>готово</td><td>валидатор, два бэкенда, ручной режим, QA, сборка вариантов, скилл</td></tr>
+        <tr><td>Гайды по ключам</td><td>готово</td><td>Gemini и OpenAI: ключ, биллинг, проверка, безопасность</td></tr>
+        <tr><td>Смена модели под этап</td><td>готово</td><td>конфиг, флаги, окружение, пожелания продюсера; планировщик и QA любой моделью; сравнение генераторов; анализ 30 моделей</td></tr>
+        <tr><td>Бенчмарк Coolness против оригинала</td><td>ждёт ключ</td><td>сравнительный контакт-лист, замер стоимости</td></tr>
+        <tr><td>Fishing с двумя золотыми картами</td><td>ждёт ключ</td><td>проверка консистентности персонажей</td></tr>
+        <tr><td>Правки промптов, прогон коллекции</td><td>далее</td><td>обновлённые шаблоны, 16 сетов, отзыв продюсера</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <footer>
+    <span>Код и промпты: MIT</span>
+    <span>Референсные карточки принадлежат студии и используются только как образец стиля</span>
+    <span>Документы в репозитории: README.ru.md, docs/OVERVIEW.ru.md, docs/MODELS.ru.md, docs/PLAN.ru.md, docs/MIRO.ru.md</span>
+  </footer>
+</main>
+</body></html>

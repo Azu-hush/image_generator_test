@@ -5,7 +5,7 @@ Claude Code does the art direction, prompt writing and visual QA; an image API r
 Two interchangeable backends: **Gemini** (`gemini-3.1-flash-image`) and **OpenAI** (`gpt-image-2.5-flare`), both with reference images.
 Without an API key the whole pipeline runs in dry-run mode and produces copy-paste prompt packs instead of images.
 
-Русская версия: [README.ru.md](README.ru.md). Work plan and log: [docs/PLAN.ru.md](docs/PLAN.ru.md). Miro board notes: [docs/MIRO.ru.md](docs/MIRO.ru.md).
+Русская версия: [README.ru.md](README.ru.md). Team brief as PDF (RU): [docs/card-art-generator-brief.pdf](docs/card-art-generator-brief.pdf). Work plan and log: [docs/PLAN.ru.md](docs/PLAN.ru.md). Model comparison: [docs/MODELS.ru.md](docs/MODELS.ru.md). Miro board notes: [docs/MIRO.ru.md](docs/MIRO.ru.md).
 
 ```
 theme + notes ──► planner (Claude, /card-set) ──► plan.json

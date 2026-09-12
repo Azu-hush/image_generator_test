@@ -13,7 +13,8 @@
     "pack": "node backends/manual.mjs",
     "qa": "node scripts/qa-template.mjs",
     "assemble": "node scripts/assemble.mjs",
-    "demo": "node scripts/validate.mjs examples/summer_fishing.plan.json && node backends/gemini.mjs --plan examples/summer_fishing.plan.json --dry-run && node backends/openai.mjs --plan examples/summer_fishing.plan.json --dry-run && node backends/manual.mjs --plan examples/summer_fishing.plan.json"
+    "demo": "node scripts/validate.mjs examples/summer_fishing.plan.json && node backends/gemini.mjs --plan examples/summer_fishing.plan.json --dry-run && node backends/openai.mjs --plan examples/summer_fishing.plan.json --dry-run && node backends/manual.mjs --plan examples/summer_fishing.plan.json",
+    "brief": "node scripts/brief.mjs"
   },
   "optionalDependencies": {
     "sharp": "^0.34.0"
