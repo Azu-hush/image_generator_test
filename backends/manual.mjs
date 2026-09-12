@@ -41,7 +41,7 @@ function copyPrompt(btn){
 </script><h1>${plan.collection} / ${plan.set.name}</h1><p>${plan.set.theme || ""}</p><p class="howto">${howto}</p>`;
 
 for (const card of plan.cards) {
-  const refs = pickRefs(card);
+  const refs = pickRefs(card, { seed: card.id });
   const prompt = buildPrompt(card, refs);
   const base = cardBase(card);
   const allRefs = [...refs.characters, ...refs.style];
