@@ -5,7 +5,7 @@ Claude Code does the art direction, prompt writing and visual QA; an image API r
 Two interchangeable backends: **Gemini** (`gemini-3.1-flash-image`) and **OpenAI** (`gpt-image-2.5-flare`), both with reference images.
 Without an API key the whole pipeline runs in dry-run mode and produces copy-paste prompt packs instead of images.
 
-Русская версия: [README.ru.md](README.ru.md).
+Русская версия: [README.ru.md](README.ru.md). Work plan and log: [docs/PLAN.ru.md](docs/PLAN.ru.md). Miro board notes: [docs/MIRO.ru.md](docs/MIRO.ru.md).
 
 ```
 theme + notes ──► planner (Claude, /card-set) ──► plan.json
@@ -18,7 +18,7 @@ qa.json       ──► assemble.mjs ──► variants/variant_1..N + contact s
 ## Quick start
 
 ```bash
-git clone <this repo> && cd card-art-generator
+git clone https://github.com/Azu-hush/playrix_test.git card-art-generator && cd card-art-generator
 npm run demo                 # validates the example plan, dry-runs the backend, writes a prompt pack
 ```
 

@@ -16,7 +16,7 @@ qa.json          ──► assemble.mjs ──► variants/variant_1..N + кон
 ## Быстрый старт
 
 ```bash
-git clone <репозиторий> && cd card-art-generator
+git clone https://github.com/Azu-hush/playrix_test.git card-art-generator && cd card-art-generator
 npm run demo
 ```
 
