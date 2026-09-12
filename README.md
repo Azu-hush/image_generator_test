@@ -18,7 +18,7 @@ qa.json       ──► assemble.mjs ──► variants/variant_1..N + contact s
 ## Quick start
 
 ```bash
-git clone https://github.com/Azu-hush/playrix_test.git card-art-generator && cd card-art-generator
+git clone https://github.com/Azu-hush/image_generator_test.git card-art-generator && cd card-art-generator
 npm run demo                 # validates the example plan, dry-runs the backend, writes a prompt pack
 ```
 
