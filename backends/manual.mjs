@@ -14,20 +14,31 @@ if (!args.plan) { console.error("usage: node backends/manual.mjs --plan <plan.js
 
 const plan = loadPlan(args.plan);
 const outDir = path.join(args.out || path.join(ROOT, "out"), slug(plan.collection), slug(plan.set.name));
-fs.mkdirSync(outDir, { recursive: true });
+const refDir = path.join(outDir, "refs");
+fs.mkdirSync(refDir, { recursive: true });
+fs.copyFileSync(args.plan, path.join(outDir, "plan.json"));
+
+// copy every referenced image next to the pack so the out folder is self-contained
+function localRef(rel) {
+  const name = path.basename(rel);
+  const dst = path.join(refDir, name);
+  if (!fs.existsSync(dst)) fs.copyFileSync(path.join(ROOT, rel), dst);
+  return "refs/" + name;
+}
 
 let md = `# Prompt pack: ${plan.collection} / ${plan.set.name}\n\n${plan.set.theme || ""}\n\n`;
-md += `How to use: open https://aistudio.google.com, pick an image model (Nano Banana), attach the reference images listed for the card, paste the prompt, set aspect ratio 4:5. Generate 3-4 times, save the best to \`candidates/NN_name_k.png\`, then run \`node scripts/qa-template.mjs\`.\n\n`;
-let html = `<!doctype html><meta charset="utf-8"><title>${plan.set.name} prompt pack</title><style>body{font:14px system-ui;margin:24px;max-width:1100px}article{border:1px solid #ccc;border-radius:8px;padding:16px;margin:16px 0}pre{white-space:pre-wrap;background:#f6f6f6;padding:12px;border-radius:6px}img{height:120px;margin:4px;border-radius:6px}button{float:right}</style><h1>${plan.collection} / ${plan.set.name}</h1><p>${plan.set.theme || ""}</p>`;
+const howto = `How to use: open ChatGPT, Google AI Studio or any image generator. For each card attach the reference images from the <code>refs/</code> folder (shown below), paste the prompt, ask for a vertical 4:5 image. Generate 2-4 times, save the best files as <code>candidates/NN_name_k.png</code> (e.g. <code>01_bobber_1.png</code>), then run <code>node scripts/qa-template.mjs --set ${path.relative(ROOT, outDir).replaceAll("\\", "/")}</code> and <code>node scripts/assemble.mjs --set ...</code>.`;
+md += howto.replace(/<\/?code>/g, "`") + "\n\n";
+let html = `<!doctype html><meta charset="utf-8"><title>${plan.set.name} prompt pack</title><style>body{font:14px system-ui;margin:24px;max-width:1100px}article{border:1px solid #ccc;border-radius:8px;padding:16px;margin:16px 0}pre{white-space:pre-wrap;background:#f6f6f6;padding:12px;border-radius:6px}img{height:120px;margin:4px;border-radius:6px;border:1px solid #ddd}button{float:right}p.howto{background:#fff8e1;padding:10px 14px;border-radius:8px}</style><h1>${plan.collection} / ${plan.set.name}</h1><p>${plan.set.theme || ""}</p><p class="howto">${howto}</p>`;
 
 for (const card of plan.cards) {
   const refs = pickRefs(card);
   const prompt = buildPrompt(card, refs);
   const base = cardBase(card);
   const allRefs = [...refs.characters, ...refs.style];
-  md += `## ${base}  (category ${card.category}${card.category === 5 ? ", GOLD" : ""})\n\nReferences: ${allRefs.map((r) => `\`${r}\``).join(", ") || "none"}\n\n\`\`\`\n${prompt}\n\`\`\`\n\n`;
-  const rel = (r) => path.relative(outDir, path.join(ROOT, r)).replaceAll("\\", "/");
-  html += `<article><button onclick="navigator.clipboard.writeText(this.nextElementSibling.nextElementSibling.textContent)">copy prompt</button><h2>${base} <small>cat ${card.category}${card.category === 5 ? " GOLD" : ""}</small></h2><div>${allRefs.map((r) => `<img src="${rel(r)}" title="${r}">`).join("")}</div><pre>${escape(prompt)}</pre></article>`;
+  const local = allRefs.map(localRef);
+  md += `## ${base}  (category ${card.category}${card.category === 5 ? ", GOLD" : ""})\n\nReferences: ${local.map((r) => `\`${r}\``).join(", ") || "none"}\n\n\`\`\`\n${prompt}\n\`\`\`\n\n`;
+  html += `<article><button onclick="navigator.clipboard.writeText(this.nextElementSibling.nextElementSibling.textContent)">copy prompt</button><h2>${base} <small>cat ${card.category}${card.category === 5 ? " GOLD" : ""}</small></h2><div>${local.map((r) => `<img src="${r}" title="${path.basename(r)}">`).join("")}</div><pre>${escape(prompt)}</pre></article>`;
 }
 fs.writeFileSync(path.join(outDir, "prompt-pack.md"), md);
 fs.writeFileSync(path.join(outDir, "prompt-pack.html"), html);
